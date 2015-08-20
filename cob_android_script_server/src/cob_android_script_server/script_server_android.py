@@ -2,11 +2,9 @@
 import time
 import inspect
 
-import roslib
-roslib.load_manifest('cob_android_script_server')
 import rospy
 
-from cob_android_script_server.srv import *
+from cob_android_msgs.srv import *
 from simple_script_server import *
 
 sss = simple_script_server()
@@ -25,31 +23,31 @@ class script_server():
 		res = ScriptResponse()
 		if req.function_name == "trigger":
 			if req.parameter_name == "init":
-				handle01 = sss.init(req.component_name)
+				handle01 = sss.init(req.component_name, blocking=False)
 			elif req.parameter_name == "stop":
-				handle01 = sss.stop(req.component_name, mode=req.mode)
+				handle01 = sss.stop(req.component_name, mode=req.mode, blocking=False)
 			elif req.function_name == "recover":
-				handle01 = sss.recover(req.component_name)
+				handle01 = sss.recover(req.component_name, blocking=False)
 			elif req.function_name == "halt":
-				handle01 = sss.halt(req.component_name)
+				handle01 = sss.halt(req.component_name, blocking=False)
 			elif req.function_name == "compose_trajectory":
 				handle01 = sss.compose_trajectory(req.component_name, req.parameter_name)
 			else:
-				handle01 = sss.trigger(req.component_name, req.parameter_name, True, req.planning)
+				handle01 = sss.trigger(req.component_name, req.parameter_name, blocking=False, planning=req.planning)
 		elif req.function_name == "move":
-			handle01 = sss.move(req.component_name,req.parameter_name,mode=req.mode)
+			handle01 = sss.move(req.component_name,req.parameter_name, blocking=False, mode=req.mode)
 		elif req.function_name == "move_base_rel":
-			handle01 = sss.move_base_rel(req.component_name,req.parameter_name,mode=req.mode)
+			handle01 = sss.move_base_rel(req.component_name,req. parameter_name, blocking=False)
 		elif req.function_name == "light":
-			handle01 = sss.set_light(req.component_name, req.parameter_name)
+			handle01 = sss.set_light(req.component_name, req.parameter_name, blocking=False)
 		elif req.function_name == "stop":
-			handle01 = sss.stop(req.component_name)
+			handle01 = sss.stop(req.component_name, blocking=False)
 		elif req.function_name == "init":
-			handle01 = sss.init(req.component_name)
+			handle01 = sss.init(req.component_name, blocking=False)
 		elif req.function_name == "recover":
-			handle01 = sss.recover(req.component_name)
+			handle01 = sss.recover(req.component_name, blocking=False)
 		elif req.function_name == "halt":
-			handle01 = sss.halt(req.component_name)
+			handle01 = sss.halt(req.component_name, blocking=False)
 		elif req.function_name == "compose_trajectory":
 			handle01 = sss.compose_trajectory(req.component_name, req.parameter_name)
 		else:
@@ -66,7 +64,7 @@ class script_server():
 
 ## Main routine for running the script server
 #
-if __name__ == '__main__':
+def script_server_android_main():
 	rospy.init_node('script_server')
 	script_server()
 	rospy.loginfo("script_server is running")
